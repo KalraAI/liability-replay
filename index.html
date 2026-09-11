@@ -81,7 +81,7 @@
 <div class="card">
   <p style="color:var(--dim);font-size:14px;margin-bottom:12px">Not a canned story - real extraction. Drop a venue event CSV (time, entity, zone, speed) or an incident report. Your files are hashed and parsed here in the browser; nothing is uploaded. The record below is built from your bytes.</p>
   <div class="drop" id="drop">Drop a venue event CSV or an incident report here - or click to choose files</div>
-  <input type="file" id="upl" multiple accept=".csv,image/*,video/*,.pdf" style="display:none">
+  <input type="file" id="upl" multiple accept=".csv,.jsonl,.ndjson,.json,image/*,video/*,.pdf" style="display:none">
   <div id="uplog" style="margin-top:12px"></div>
   <div id="uprec" style="display:none;margin-top:16px">
     <div style="font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--acc);margin-bottom:10px">CLAIM RECORD - BUILT FROM YOUR FILES</div>
@@ -124,6 +124,7 @@
     <tr><td>Severity and cost</td><td>Soft-tissue pattern per the incident report - medical reserve $7,500, within the graded band for this incident class. Staging screen: no prior-claimant match.</td></tr>
     <tr><td>Cycle time</td><td>Incident to claim-ready file: <b>5 minutes 30 seconds.</b> Industry average: weeks of footage requests.</td></tr>
     <tr><td>Evidence</td><td><span class="pill">event stream hashed</span><span class="pill">POS log hashed</span><span class="pill">incident report hashed</span><span class="pill">staffing log hashed</span></td></tr>
+    <tr><td>External evidence - selected by scenario</td><td><div class="mono" style="font-size:12px;line-height:1.8"><div><b style="color:var(--ok)">USED</b> time of day + operating hours - 21:14, venue open, aisle 4 should have been active and patrolled</div><div><b style="color:var(--ok)">USED</b> lighting / visibility - aisle 4 fixture at 40% output; shaped what a reasonable patron could see</div><div><b style="color:var(--ok)">USED</b> footfall - 34 patrons in venue, moderate aisle traffic; encountering the hazard was foreseeable</div><div><b style="color:var(--ok)">USED</b> staffing - 2 floor staff on shift against 4 scheduled; drove the 10-minute notice gap</div><div><b style="color:var(--ok)">USED</b> inspections - last documented floor sweep 20:51, twenty-three minutes before the fall</div><div><b style="color:var(--ok)">USED</b> emergency response - staff response 5m 02s, incident report opened 21:26; severity documented</div><div><b style="color:var(--warn)">EXCLUDED</b> weather (ice / rain) - indoor aisle spill; entrance log shows no tracked-in precipitation</div><div><b style="color:var(--warn)">EXCLUDED</b> third-party access - no vendors or contractors on site that evening</div></div><div style="margin-top:6px;color:var(--dim);font-size:12.5px">Selection follows the scenario: an icy-entry fall would pull the weather feed; this indoor spill excludes it with the reason stated. Every candidate is considered, then used or excluded - never a blanket checklist.</div></td></tr>
     <tr><td>Signature</td><td class="mono" id="sigcell">record REAL-L-2c48b7e1 - sha-256 chained - audit ledger entry 14/14</td></tr>
   </table>
   <div style="margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button class="run" id="exportRec" style="padding:10px 22px;font-size:13.5px">Export signed record</button><span class="mono" id="exNote" style="color:var(--dim);font-size:12px"></span></div>
@@ -276,19 +277,20 @@ drop.onclick=()=>upl.click();
 upl.onchange=()=>handleFiles(upl.files);
 async function handleFiles(files){
   const log=document.getElementById('uplog');log.innerHTML='';
-  let csvRows=0;
+  let csvRows=0,jsonlRows=0;
   for(const f of files){
     const buf=await f.arrayBuffer();const h=await sha(new TextDecoder('latin1').decode(buf).slice(0,200000));
     const row=document.createElement('div');row.className='evrow';
     row.innerHTML='<b>'+f.name+'</b> - '+f.size+' bytes - sha-256 '+h.slice(0,16)+'... - hashed locally, never uploaded';
     log.appendChild(row);
     if(f.name.endsWith('.csv')){const txt=new TextDecoder().decode(buf);csvRows+=txt.split('\n').filter(l=>l.trim()).length-1;}
+    if(/\.(jsonl|ndjson|json)$/i.test(f.name)){const txt=new TextDecoder().decode(buf);jsonlRows+=txt.split('\n').filter(l=>{l=l.trim();if(!l||l[0]!=='{')return false;try{const o=JSON.parse(l);return o.ts!==undefined&&o.entity!==undefined;}catch(e){return false;}}).length;}
   }
   if(!files.length)return;
   const rec=document.getElementById('uprec');rec.style.display='block';
   const t=document.getElementById('uprect');
-  t.innerHTML='<tr><td>Files hashed</td><td>'+files.length+' file(s), '+(csvRows?csvRows+' events parsed':'no CSV readings found')+'</td></tr>'
-    +'<tr><td>Preliminary read</td><td>'+(csvRows>10?'Event stream present - reconstruction can run on this file.':'More event data needed for a full reconstruction.')+'</td></tr>'
+  t.innerHTML='<tr><td>Files hashed</td><td>'+files.length+' file(s), '+((csvRows||jsonlRows)?(csvRows?csvRows+' CSV events':'')+(csvRows&&jsonlRows?' + ':'')+(jsonlRows?jsonlRows+' site-agent JSON events':'')+' parsed':'no event readings found')+'</td></tr>'
+    +'<tr><td>Preliminary read</td><td>'+(csvRows+jsonlRows>10?'Event stream present - reconstruction can run on this file.':'More event data needed for a full reconstruction.')+'</td></tr>'
     +'<tr><td>Signature</td><td class="mono">record built in-browser - nothing uploaded</td></tr>';
   document.getElementById('upExport').onclick=()=>{
     const rows=[...t.querySelectorAll('tr')].map(tr=>[tr.cells[0].textContent,tr.cells[1].textContent]);
@@ -309,13 +311,13 @@ document.querySelectorAll('#scales .scbtn').forEach(btn=>btn.onclick=()=>{
   document.getElementById('hAcc').textContent=cohorts[i][1].toFixed(1)+'%';
   [...chart.children].forEach((b,j)=>b.classList.toggle('on',j===i));
 });
-const causes=['slip-and-fall - wet floor, logged hazard','slip-and-fall - unlogged hazard','customer altercation - overserve indicators','after-hours intrusion - forced entry','staging pattern - prior-claimant match'];
+const causes=[['slip-and-fall - wet floor, logged hazard','weather excluded - indoor spill; lighting and staffing used'],['slip-and-fall - unlogged hazard','inspections used - sweep cadence decides notice'],['customer altercation - overserve indicators','weather excluded - indoor; POS and staffing used'],['after-hours intrusion - forced entry','operating hours and access logs used; local alerts considered'],['staging pattern - prior-claimant match','prior-claim history used; scene evidence excluded']];
 document.getElementById('hgo').onclick=()=>{
   hRuns++;document.getElementById('hRuns').textContent=hRuns;
-  const log=document.getElementById('hlog');const cause=causes[Math.floor(R()*causes.length)];
+  const log=document.getElementById('hlog');const c=causes[Math.floor(R()*causes.length)];const cause=c[0];const evnote=c[1];
   const conf=(82+R()*14).toFixed(1);const ok=R()>0.12;
   const row=document.createElement('div');row.className='evrow';
-  row.innerHTML='INC-'+(7000+hRuns)+' - generated incident: <b>'+cause+'</b> - graded '+conf+'% confidence - '+(ok?'MATCHES ground truth':'grading miss logged');
+  row.innerHTML='INC-'+(7000+hRuns)+' - generated incident: <b>'+cause+'</b> - graded '+conf+'% confidence - evidence: '+evnote+' - '+(ok?'MATCHES ground truth':'grading miss logged');
   log.prepend(row);while(log.children.length>6)log.lastChild.remove();
   const v=document.getElementById('hverd');v.style.display='block';
   v.className='verd '+(ok?'hit':'miss');
