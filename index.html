@@ -318,7 +318,18 @@ function buildScene(evts){
   if(fi<0) fi=Math.floor(n*0.6);
   const fall=tr[fi], fallZone=zc[zkey(fall.zone)]||zones[0];
   const fallT=Math.min(0.85,Math.max(0.25,fi/(n-1)));
-  let haz=null,hazI=-1; tr.forEach((e,i)=>{ if(!haz&&(e.type==='hazard'||e.hazard===true||e.kind==='hazard')){haz=e;hazI=i;} });
+  // pair the fall with the most recent hazard logged AT OR BEFORE it - a hazard
+  // logged after the fall is not notice, and pairing to it yields a meaningless
+  // negative window. Same-zone hazards are preferred when several qualify.
+  const fallTs=parseTS(fall.ts);
+  const hazards=[]; tr.forEach((e,i)=>{ if(e.type==='hazard'||e.hazard===true||e.kind==='hazard'){const t=parseTS(e.ts); if(t)hazards.push({e,t,i});} });
+  let haz=null,hazI=-1;
+  if(fallTs){
+    const before=hazards.filter(h=>h.t<=fallTs).sort((a,b)=>b.t-a.t);
+    const pick=before.find(h=>h.e.zone===fall.zone)||before[0];
+    if(pick){haz=pick.e;hazI=pick.i;}
+  }
+  const hazardsAllAfter=!haz&&hazards.length>0;
   const dwell={}; for(let i=1;i<n;i++){const a=tr[i-1],b=tr[i];const da=parseTS(a.ts),db=parseTS(b.ts); if(da&&db){const k=String(a.zone);dwell[k]=(dwell[k]||0)+(db-da)/1000;}}
   let dz=null,dv=0; for(const k in dwell) if(dwell[k]>dv){dv=dwell[k];dz=k;}
   const wps=[0,Math.floor(n*0.2),Math.floor(n*0.4),Math.floor(n*0.55),Math.floor(n*0.7),fi].filter((v,i,a)=>a.indexOf(v)===i&&v<n);
@@ -332,12 +343,12 @@ function buildScene(evts){
   if(dz&&dv>20) evs.push([fmtT(t0.ts),ent+' dwells in '+dz+' '+Math.round(dv)+'s - tracked across zones']);
   evs.push([fT,ent+' in '+fall.zone+' - velocity '+(+tr[Math.max(0,fi-1)].vel||0).toFixed(1)+' to '+(+fall.vel||0).toFixed(1)+' m/s - fall signature']);
   evs.push(['IMPACT',fT+' - sudden-stop event in '+fall.zone+(noticeTxt?' - '+noticeTxt+' after the hazard was logged':'')+(haz?' - no cleanup event follows in this stream':''),'impact']);
-  evs.push(['POST','stream ends '+fmtT(tr[n-1].ts)+' - '+(noticeTxt?'notice window '+noticeTxt:'no hazard event in file - notice window cannot be established from this stream')]);
+  evs.push(['POST','stream ends '+fmtT(tr[n-1].ts)+' - '+(noticeTxt?'notice window '+noticeTxt:(hazardsAllAfter?'hazard events post-date the fall - no pre-fall notice establishable from this stream':'no hazard event in file - notice window cannot be established from this stream'))]);
   const marks=[{t:0,h:evs[0][1]},{t:fallT*0.5,h:(evs[1]||evs[0])[1]},{t:fallT,h:(evs.find(e=>e[0]==='IMPACT')||evs[evs.length-1])[1]},{t:1,h:evs[evs.length-1][1]}];
   const hz=haz?pt(haz,hazI):null;
   return {evs,zones,hz,hazZone:haz?zc[zkey(haz.zone)]:null,path,marks,fallT,staffT:2,label:haz?'hazard logged '+fmtT(haz.ts):'',fallLabel:'FALL '+fT,src:'dropped',
     what:'Reconstructed from the dropped event stream: '+n+' events, entity '+ent+', '+zNames.length+' zones. Sudden-stop signature in '+fall.zone+' at '+fT+' (velocity '+(+tr[Math.max(0,fi-1)].vel||0).toFixed(1)+' to '+(+fall.vel||0).toFixed(1)+' m/s).',
-    notice:noticeTxt?('Hazard logged '+fmtT(haz.ts)+' - '+noticeTxt+' elapsed before the fall, no cleanup event in the stream. Notice window computed from the dropped file.'):('No hazard event present in the dropped stream - a notice window cannot be established from this file alone; POS or incident-report evidence would be required.')};
+    notice:noticeTxt?('Hazard logged '+fmtT(haz.ts)+' - '+noticeTxt+' elapsed before the fall, no cleanup event in the stream. Notice window computed from the dropped file.'):(hazardsAllAfter?'Hazard events in this stream post-date the fall - no pre-fall notice establishable from this file; POS or incident-report evidence would be required.':'No hazard event present in the dropped stream - a notice window cannot be established from this file alone; POS or incident-report evidence would be required.')};
 }
 
 async function handleFiles(files){
