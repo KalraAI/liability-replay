@@ -322,7 +322,7 @@ function buildScene(evts){
   // logged after the fall is not notice, and pairing to it yields a meaningless
   // negative window. Same-zone hazards are preferred when several qualify.
   const fallTs=parseTS(fall.ts);
-  const hazards=[]; tr.forEach((e,i)=>{ if(e.type==='hazard'||e.hazard===true||e.kind==='hazard'){const t=parseTS(e.ts); if(t)hazards.push({e,t,i});} });
+  const hazards=[]; evts.forEach((e,i)=>{ if(e.type==='hazard'||e.hazard===true||e.kind==='hazard'){const t=parseTS(e.ts); if(t)hazards.push({e,t,i});} });
   let haz=null,hazI=-1;
   if(fallTs){
     const before=hazards.filter(h=>h.t<=fallTs).sort((a,b)=>b.t-a.t);
