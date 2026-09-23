@@ -187,7 +187,7 @@
 <h2>10 - Where this sits</h2>
 <div class="card"><p style="color:var(--dim);font-size:14px">The same reconstruction engine that grades vehicle crashes and property losses grades premises liability: event metadata and documents in, notice windows and liability graded, a signed claim-ready record out. Auto and property proved the pattern; premises liability completes the everyday P&amp;C claim set - GL, liquor liability, security.</p></div>
 
-<footer>Working beta - synthetic data only. The generator writes the corpus; the grader is measured against it. Nothing on this page uploads anything.</footer>
+<footer>Copyright Placid Lake LLC 2026</footer>
 </div>
 
 <script>
@@ -351,19 +351,25 @@ function buildScene(evts){
     notice:noticeTxt?('Hazard logged '+fmtT(haz.ts)+' - '+noticeTxt+' elapsed before the fall, no cleanup event in the stream. Notice window computed from the dropped file.'):(hazardsAllAfter?'Hazard events in this stream post-date the fall - no pre-fall notice establishable from this file; POS or incident-report evidence would be required.':'No hazard event present in the dropped stream - a notice window cannot be established from this file alone; POS or incident-report evidence would be required.')};
 }
 
+function parseCsvRows(text){const out=[];let row=[],v='',q=false;for(let i=0;i<text.length;i++){const c=text[i];if(q){if(c==='"'&&text[i+1]==='"'){v+='"';i++;}else if(c==='"')q=false;else v+=c;}else if(c==='"')q=true;else if(c===','){row.push(v);v='';}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(v);if(row.some(x=>x.trim()))out.push(row);row=[];v='';}else v+=c;}row.push(v);if(row.some(x=>x.trim()))out.push(row);return out;}
+
 async function handleFiles(files){
   const log=document.getElementById('uplog');log.innerHTML='';
-  let csvRows=0,jsonlRows=0;droppedEvents=[];
+  let csvRows=0,jsonlRows=0;droppedEvents=[],parseErrors=[];
   for(const f of files){
     const buf=await f.arrayBuffer();const h=await sha(new TextDecoder('latin1').decode(buf).slice(0,200000));
     const row=document.createElement('div');row.className='evrow';
     row.innerHTML='<b>'+f.name+'</b> - '+f.size+' bytes - sha-256 '+h.slice(0,16)+'... - hashed locally, never uploaded';
     log.appendChild(row);
-    if(f.name.endsWith('.csv')){const txt=new TextDecoder().decode(buf);const L=txt.split('\n').filter(l=>l.trim());csvRows+=L.length-1;
-      L.slice(1).forEach(l=>{const c=l.split(',');if(c.length>=4&&c[1]&&c[1]!=='entity')droppedEvents.push({ts:c[0].trim(),entity:c[1].trim(),zone:(c[2]||'floor').trim(),pos:null,vel:+c[3]||0});});}
-    if(/\.(jsonl|ndjson|json)$/i.test(f.name)){const txt=new TextDecoder().decode(buf);txt.split('\n').forEach(l=>{l=l.trim();if(!l||l[0]!=='{')return;try{const o=JSON.parse(l);if(o.ts!==undefined&&o.entity!==undefined){jsonlRows++;droppedEvents.push({ts:o.ts,entity:String(o.entity),zone:String(o.zone||'floor'),pos:Array.isArray(o.pos)?o.pos:null,vel:+(o.vel!==undefined?o.vel:(o.speed||0)),type:o.type,hazard:o.hazard,kind:o.kind});}}catch(e){}});}
+    if(f.name.endsWith('.csv')){const rows=parseCsvRows(new TextDecoder().decode(buf));csvRows+=Math.max(0,rows.length-1);
+      const h=(rows[0]||[]).map(x=>x.trim().toLowerCase()),idx=(...ns)=>h.findIndex(x=>ns.includes(x));
+      const it=idx('time','timestamp','ts'),ie=idx('entity','actor','person','object'),iz=idx('zone','area','location'),iv=idx('speed_m_s','velocity_m_s','vel_m_s');
+      if(it<0||ie<0||iz<0||iv<0)parseErrors.push(f.name+': require time, entity, zone and speed_m_s');
+      else rows.slice(1).forEach(c=>{const ts=(c[it]||'').trim(),entity=(c[ie]||'').trim(),zone=(c[iz]||'').trim(),vel=Number(c[iv]);if(ts&&entity&&zone&&Number.isFinite(vel))droppedEvents.push({ts,entity,zone,pos:null,vel,source_type:'venue_event_csv',speed_unit:'m/s'});});}
+    if(/\.(jsonl|ndjson|json)$/i.test(f.name)){const txt=new TextDecoder().decode(buf);txt.split('\n').forEach(l=>{l=l.trim();if(!l||l[0]!=='{')return;try{const o=JSON.parse(l);if(o.ts!==undefined&&o.entity!==undefined&&o.zone!==undefined&&o.speed_unit==='m/s'&&Number.isFinite(Number(o.vel!==undefined?o.vel:o.speed))){jsonlRows++;droppedEvents.push({ts:o.ts,entity:String(o.entity),zone:String(o.zone),pos:Array.isArray(o.pos)?o.pos:null,vel:Number(o.vel!==undefined?o.vel:o.speed),type:o.type,hazard:o.hazard,kind:o.kind,source_type:'venue_event_jsonl',speed_unit:'m/s'});}}catch(e){}});}
   }
   if(!files.length)return;
+  if(parseErrors.length)log.innerHTML+='<div class="evrow"><b>Rejected:</b> '+parseErrors.join('; ')+'</div>';
   if(droppedEvents.length>=10){
     SCN=buildScene(droppedEvents);
     document.querySelectorAll('#rectab tr').forEach(tr=>{
