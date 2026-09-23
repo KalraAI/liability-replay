@@ -67,12 +67,12 @@
 <div class="wrap">
 <header><div class="logo">LIABILITY REPLAY</div><div class="tag">WORKING BETA - RUN THE FLOW</div></header>
 
-<h1>A customer slips at 9 PM.<br>The other side is still requesting footage.<br><em>The claim file is already signed.</em></h1>
-<p class="sub">Camera metadata if cameras exist - but none are needed. The venue's own event stream, door logs and incident report rebuild what happened into a 4D reconstruction and a signed, claim-ready outcome record: what happened, whose liability, what it costs, with the evidence to back every line.</p>
+<h1>An incident is reported.<br>The available venue records are still being assembled.<br><em>Replay the supplied evidence before making a claim decision.</em></h1>
+<p class="sub">This working beta hashes supplied files, parses unit-bearing venue events, renders an observed timeline and exports a signed extraction record. Missing camera, hazard, notice, POS or report channels remain unavailable; the page does not determine liability.</p>
 
 <h2>01 - The input</h2>
 <div class="grid">
-  <div class="card"><h3>Venue cameras (optional)</h3><p>Anonymous event metadata from the cameras already on site - any system, any age. No cameras, no problem: the claim file still builds from door logs, POS timestamps and the incident report alone.</p><p class="mono" style="margin-top:8px">cam_events_0910.jsonl - metadata only - footage stays on-site</p></div>
+  <div class="card"><h3>Venue cameras (optional)</h3><p>Anonymous event metadata from the cameras already on site - any system, any age. Camera metadata is optional. Without it, the output is limited to supplied door logs, POS timestamps and incident reports.</p><p class="mono" style="margin-top:8px">cam_events_0910.jsonl - metadata only - footage stays on-site</p></div>
   <div class="card"><h3>Venue event stream</h3><p>Entity tracks, zone, speed, dwell - who moved where, when, how behavior changed. Door and access logs, alarm and panic-button events alongside.</p><p class="mono" style="margin-top:8px">venue_stream_8821.csv - P-114 dwell 45s - 9:12 PM</p></div>
   <div class="card"><h3>Context + documents</h3><p>The incident report, staffing log, POS timestamps and prior-incident history hashed into the file - the notice window is graded from the venue's own records, not assumed.</p><p class="mono" style="margin-top:8px">incident_report.pdf - staffing_thu.csv - pos_21-04Z.json</p></div>
 </div>
@@ -96,11 +96,11 @@
     <div class="stage"><div class="dot"></div>Ingesting the event stream, logs and incident report</div>
     <div class="stage"><div class="dot"></div>Extracting the entities and zones - entrance, bar area, aisle 4</div>
     <div class="stage"><div class="dot"></div>Building the 4D timeline - who moved, when, how behavior changed</div>
-    <div class="stage"><div class="dot"></div>Isolating the incident moment and the causal chain</div>
-    <div class="stage"><div class="dot"></div>Grading liability against learned incident patterns</div>
+    <div class="stage"><div class="dot"></div>Locating sudden-stop and logged-hazard events</div>
+    <div class="stage"><div class="dot"></div>Comparing extracted features with the synthetic reference corpus</div>
     <div class="stage"><div class="dot"></div>Signing the record - hash, timestamp, audit ledger</div>
   </div>
-  <p class="starthere">START HERE - press Run. The signed claim file builds in about 10 seconds.</p>
+  <p class="starthere">START HERE - press Run. The fictional example builds a signed replay record in about 10 seconds.</p>
   <button class="run pulse" id="run">Run reconstruction</button>
 </div>
 
@@ -118,11 +118,11 @@
 <div class="card">
   <table class="rec" id="rectab">
     <tr><td>What happened</td><td>A customer slipped on a spilled drink in aisle 4 at 21:14; fall signature confirmed in the event stream; assisted up at 21:19, declined ambulance.</td></tr>
-    <tr><td>Notice window</td><td>Hazard logged at POS 21:04 - 10m 08s elapsed before the fall, no cleanup dispatched. Constructive notice established from the venue's own systems.</td></tr>
-    <tr><td>Liability read</td><td><b>Premises liability primary - 88% confidence.</b> Pattern-matched against 61,000 labeled premises incidents - slip-and-fall with a logged hazard and an elapsed notice window.</td></tr>
+    <tr><td>Notice window</td><td>Hazard logged at POS 21:04 - 10m 08s elapsed before the fall, no cleanup dispatched. The fictional stream contains a hazard log 10m 08s before the fall. Legal notice is not determined.</td></tr>
+    <tr><td>Synthetic pattern comparison</td><td>Fictional feature match: 88% against the generated premises-incident corpus. This is not a liability conclusion.</td></tr>
     <tr><td>Claim type</td><td>GL - slip-and-fall. No liquor-liability marker: P-114 served one drink 90 minutes prior, no overserve pattern in POS history.</td></tr>
     <tr><td>Severity and cost</td><td>Soft-tissue pattern per the incident report - medical reserve $7,500, within the graded band for this incident class. Staging screen: no prior-claimant match.</td></tr>
-    <tr><td>Cycle time</td><td>Incident to claim-ready file: <b>5 minutes 30 seconds.</b> Industry average: weeks of footage requests.</td></tr>
+    <tr><td>Cycle time</td><td>Fictional example runtime: <b>5 minutes 30 seconds.</b> This is a modeled demo value, not a production benchmark.</td></tr>
     <tr><td>Evidence</td><td><span class="pill">event stream hashed</span><span class="pill">POS log hashed</span><span class="pill">incident report hashed</span><span class="pill">staffing log hashed</span></td></tr>
     <tr><td>External evidence - selected by scenario</td><td><div class="mono" style="font-size:12px;line-height:1.8"><div><b style="color:var(--ok)">USED</b> time of day + operating hours - 21:14, venue open, aisle 4 should have been active and patrolled</div><div><b style="color:var(--ok)">USED</b> lighting / visibility - aisle 4 fixture at 40% output; shaped what a reasonable patron could see</div><div><b style="color:var(--ok)">USED</b> footfall - 34 patrons in venue, moderate aisle traffic; encountering the hazard was foreseeable</div><div><b style="color:var(--ok)">USED</b> staffing - 2 floor staff on shift against 4 scheduled; drove the 10-minute notice gap</div><div><b style="color:var(--ok)">USED</b> inspections - last documented floor sweep 20:51, twenty-three minutes before the fall</div><div><b style="color:var(--ok)">USED</b> emergency response - staff response 5m 02s, incident report opened 21:26; severity documented</div><div><b style="color:var(--warn)">EXCLUDED</b> weather (ice / rain) - indoor aisle spill; entrance log shows no tracked-in precipitation</div><div><b style="color:var(--warn)">EXCLUDED</b> third-party access - no vendors or contractors on site that evening</div></div><div style="margin-top:6px;color:var(--dim);font-size:12.5px">Selection follows the scenario: an icy-entry fall would pull the weather feed; this indoor spill excludes it with the reason stated. Every candidate is considered, then used or excluded - never a blanket checklist.</div></td></tr>
     <tr><td>Signature</td><td class="mono" id="sigcell">record REAL-L-2c48b7e1 - sha-256 chained - audit ledger entry 14/14</td></tr>
@@ -185,7 +185,7 @@
 </div>
 
 <h2>10 - Where this sits</h2>
-<div class="card"><p style="color:var(--dim);font-size:14px">The same reconstruction engine that grades vehicle crashes and property losses grades premises liability: event metadata and documents in, notice windows and liability graded, a signed claim-ready record out. Auto and property proved the pattern; premises liability completes the everyday P&amp;C claim set - GL, liquor liability, security.</p></div>
+<div class="card"><p style="color:var(--dim);font-size:14px">This working beta applies the same evidence-record pattern to supplied venue events and documents: event chronology, logged-hazard timing, source hashes, missing-channel labels and a signed extraction record for human review. It does not establish legal notice or liability.</p></div>
 
 <footer>Copyright Placid Lake LLC 2026</footer>
 </div>
@@ -228,7 +228,7 @@ SCN.marks=[{t:0,h:'21:04 - drink spilled in aisle 4 - logged at POS, no cleanup 
              {t:.55,h:'21:12 - P-114 crosses the main floor toward aisle 4'},
              {t:.6,h:'21:14 - velocity 1.3 to 0 m/s in 0.4s - FALL - 10m 08s after the hazard was logged'},
              {t:.8,h:'21:19 - staff response 5m 02s - incident report opened 21:26'},
-             {t:1,h:'signed record - notice window 10m 08s - premises liability primary'}];
+             {t:1,h:'signed record - fictional hazard-to-fall interval 10m 08s - human review required'}];
 function Z(){return SCN.zones;}
 function segPos(p){
   const t=Math.min(p/SCN.fallT,1);
@@ -274,7 +274,7 @@ draw(0);
 async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}
 function download(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'application/json'}));a.download=name;a.click();}
 async function exportRecord(rows,note){
-  const rec={record_type:'claim-ready outcome record',format_version:'1.0',product:'liability-replay',ts:new Date().toISOString(),fields:rows};
+  const rec={record_type:'signed replay extraction record',format_version:'1.0',product:'liability-replay',ts:new Date().toISOString(),fields:rows};
   rec.sha256=await sha(JSON.stringify(rec.fields));
   if(window.__storeRecord)window.__storeRecord(rec,rec.sha256);
   download('liability-replay-record-'+rec.sha256.slice(0,8)+'.json',JSON.stringify(rec,null,2));
