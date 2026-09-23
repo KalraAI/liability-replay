@@ -98,10 +98,10 @@
     <div class="stage"><div class="dot"></div>Finding people and areas: entrance, bar, aisle 4</div>
     <div class="stage"><div class="dot"></div>Building the timeline: who moved, when, what changed</div>
     <div class="stage"><div class="dot"></div>Finding sudden stops and logged hazards</div>
-    <div class="stage"><div class="dot"></div>Comparing it with our library of made-up incidents</div>
+    <div class="stage"><div class="dot"></div>Comparing it with our library of synthetic incidents</div>
     <div class="stage"><div class="dot"></div>Sealing the record: fingerprint, time stamp, audit log</div>
   </div>
-  <p class="starthere">START HERE - press Run. The made-up example builds a sealed replay in about 10 seconds.</p>
+  <p class="starthere">START HERE - press Run. The synthetic example builds a sealed replay in about 10 seconds.</p>
   <button class="run pulse" id="run">Run reconstruction</button>
 </div>
 
@@ -118,11 +118,11 @@
 <h2>06 - The record</h2>
 <div class="card">
   <table class="rec" id="rectab">
-    <tr><td>What the example shows</td><td>Made-up example: a customer fell in aisle 4 at 21:14, near a logged drink spill. The fall shows up in the activity data. They were helped up at 21:19 and declined an ambulance.</td></tr>
+    <tr><td>What the example shows</td><td>Synthetic example: a customer fell in aisle 4 at 21:14, near a logged drink spill. The fall shows up in the activity data. They were helped up at 21:19 and declined an ambulance.</td></tr>
     <tr><td>Time since the hazard was logged</td><td>Spill logged at the till at 21:04, 10m 08s before the fall. No cleanup was logged. This does not decide legal notice.</td></tr>
-    <tr><td>Comparison with made-up cases</td><td>Made-up example: 88% similar to cases in our made-up library. This is not a finding on liability.</td></tr>
+    <tr><td>Comparison with synthetic cases</td><td>Synthetic example: 88% similar to cases in our synthetic library. This is not a finding on liability.</td></tr>
     <tr><td>Claim type</td><td>General liability, slip-and-fall. Till records show P-114 bought one drink 90 minutes earlier.</td></tr>
-    <tr><td>Severity and cost</td><td>The incident report describes a soft-tissue injury. Example medical estimate $7,500. No match to past claimants in the made-up data.</td></tr>
+    <tr><td>Severity and cost</td><td>The incident report describes a soft-tissue injury. Example medical estimate $7,500. No match to past claimants in the synthetic data.</td></tr>
     <tr><td>Cycle time</td><td>Example run time: <b>5 minutes 30 seconds.</b> Demo figure, not a real-world benchmark.</td></tr>
     <tr><td>Evidence</td><td><span class="pill">activity data fingerprinted</span><span class="pill">till log fingerprinted</span><span class="pill">incident report fingerprinted</span><span class="pill">staffing log fingerprinted</span></td></tr>
     <tr><td>Outside information - chosen for this example</td><td><div class="mono" style="font-size:12px;line-height:1.8"><div><b style="color:var(--ok)">USED</b> time and opening hours - 21:14, venue open</div><div><b style="color:var(--ok)">USED</b> lighting - aisle 4 light at 40% output</div><div><b style="color:var(--ok)">USED</b> foot traffic - 34 people in the venue, moderate traffic in the aisle</div><div><b style="color:var(--ok)">USED</b> staffing - 2 floor staff on shift, 4 scheduled</div><div><b style="color:var(--ok)">USED</b> inspections - last logged floor sweep at 20:51, 23 minutes before the fall</div><div><b style="color:var(--ok)">USED</b> staff response - staff reached the customer in 5m 02s; incident report opened 21:26</div><div><b style="color:var(--warn)">EXCLUDED</b> weather (ice or rain) - indoor spill; entrance log shows no rain or snow tracked in</div><div><b style="color:var(--warn)">EXCLUDED</b> third-party access - no vendors or contractors on site that evening</div></div><div style="margin-top:6px;color:var(--dim);font-size:12.5px">What gets used depends on the example. A fall on an icy entrance would use weather. This indoor spill leaves it out, and the reason is shown. Each item is either used or left out, with a reason.</div></td></tr>
@@ -154,7 +154,7 @@
   </div>
 </div>
 
-<h2>08 - Testing at scale with made-up data</h2>
+<h2>08 - Testing at scale with synthetic data</h2>
 <div class="card">
   <p style="color:var(--dim);font-size:14px;margin-bottom:10px">Real incident footage is rare and hard to use legally. So we make up labeled incidents (slips, fights, break-ins, staged claims) and the system practices on those first.</p>
   <div class="ctl" id="scales">
@@ -165,15 +165,15 @@
     <button class="scbtn" data-s="4">100,000 incidents</button>
   </div>
   <div class="stats">
-    <div class="stat"><div class="n" id="hCohort">100</div><div class="l">made-up venues</div></div>
-    <div class="stat"><div class="n" id="hCorpus">61K</div><div class="l">made-up incidents in the library</div></div>
-    <div class="stat"><div class="n" id="hAcc">86.1%</div><div class="l">correct on the made-up test set</div></div>
+    <div class="stat"><div class="n" id="hCohort">100</div><div class="l">synthetic venues</div></div>
+    <div class="stat"><div class="n" id="hCorpus">61K</div><div class="l">synthetic incidents in the library</div></div>
+    <div class="stat"><div class="n" id="hAcc">86.1%</div><div class="l">correct on the synthetic test set</div></div>
     <div class="stat"><div class="n" id="hRuns">0</div><div class="l">incidents scored this session</div></div>
   </div>
   <div class="chartwrap"><div class="chart" id="accChart"></div></div>
   <div id="hlog" style="margin-top:10px"></div>
   <div class="verd" id="hverd"></div>
-  <button class="run" id="hgo" style="margin-top:14px">Generate and score a made-up incident</button>
+  <button class="run" id="hgo" style="margin-top:14px">Generate and score a synthetic incident</button>
   <button class="run" id="hgo10k" style="margin-top:14px;margin-left:10px">Run the 10,000-incident test</button>
   <div id="h10k" style="margin-top:12px"></div>
 </div>
@@ -181,13 +181,15 @@
 <h2>09 - How it works</h2>
 <div class="cols3">
   <div class="card"><h3>No video needed.</h3><p>Venues already record what happens: camera events, door logs, till times, alarms. The replay is built from data the venue already has. Video helps, but it's not required.</p></div>
-  <div class="card"><h3>It learns from made-up incidents.</h3><p>Made-up slips, fights, break-ins and staged claims, each with a known answer. We write the cases, then score the system against them.</p></div>
+  <div class="card"><h3>It learns from synthetic incidents.</h3><p>Synthetic slips, fights, break-ins and staged claims, each with a known answer. We write the cases, then score the system against them.</p></div>
   <div class="card"><h3>Sealed records, not stories.</h3><p>Every record is fingerprinted, time-stamped and written to an audit log. You get a record you can check, not a story you have to piece together again.</p></div>
 </div>
 
 <h2>10 - What this is and isn't</h2>
 <div class="card"><p style="color:var(--dim);font-size:14px">Liability Replay is in beta. It replays the data you give it and shows what's missing. A person makes the call. It does not decide legal notice or liability.</p></div>
 
+<div class="card" id="real-data"><p style="font-size:14px;margin-bottom:8px"><strong>Real-world numbers (public data)</strong></p><p style="color:var(--dim);font-size:14px;margin-bottom:6px">Falls were the leading cause of nonfatal injury emergency room visits in the U.S. in 2023: 8,870,302 visits. Source: CDC WISQARS, <a href="https://wisqars.cdc.gov/pdfs/leading-causes-of-nonfatal-emergency-dept-visits_2023_508.pdf" target="_blank" rel="noopener" style="color:var(--acc)">10 Leading Causes of Nonfatal Emergency Department Visits, 2023</a>.</p><p style="color:var(--dim);font-size:14px;margin-bottom:6px">Falls among adults 65 and older caused over 38,000 deaths and nearly 3 million emergency room visits in 2021. Source: CDC, <a href="https://www.cdc.gov/falls/about/index.html" target="_blank" rel="noopener" style="color:var(--acc)">About Older Adult Fall Prevention</a>.</p></div>
+<div class="card" id="data-sources"><p style="color:var(--dim);font-size:14px"><strong>Data sources.</strong> The real-world numbers above come from the public sources linked next to each one. The example incident, venue activity, till and staffing logs, cost figures and test venues are synthetic data, written by us for this demo. We kept the example synthetic on purpose: a real case would mean real people's data. No other government, regulator or public data is used.</p></div>
 <footer>Copyright Placid Lake LLC 2026</footer>
 </div>
 
