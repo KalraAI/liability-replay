@@ -65,97 +65,98 @@
 </head>
 <body>
 <div class="wrap">
-<header><div class="logo">LIABILITY REPLAY</div><div class="tag">WORKING BETA - RUN THE FLOW</div></header>
+<header><div class="logo">LIABILITY REPLAY</div><div class="tag">BETA - TRY IT</div></header>
 
-<h1>An incident is reported.<br>The available venue records are still being assembled.<br><em>Replay the supplied evidence before making a claim decision.</em></h1>
-<p class="sub">This working beta hashes supplied files, parses unit-bearing venue events, renders an observed timeline and exports a signed extraction record. Missing camera, hazard, notice, POS or report channels remain unavailable; the page does not determine liability.</p>
+<h1>The truth, replayed.<br><em>Facts, not guesswork.</em></h1>
+<p class="sub"><strong>Someone got hurt at the venue. The evidence is still coming in. Replay what's here before you decide anything.</strong></p>
+<p class="sub">Replayed from the venue's own records: door logs, till times, incident reports. Every replay is sealed. Change one number and it shows. If a piece of data is missing, we say so. We don't guess.</p>
 
 <h2>01 - The input</h2>
 <div class="grid">
-  <div class="card"><h3>Venue cameras (optional)</h3><p>Anonymous event metadata from the cameras already on site - any system, any age. Camera metadata is optional. Without it, the output is limited to supplied door logs, POS timestamps and incident reports.</p><p class="mono" style="margin-top:8px">cam_events_0910.jsonl - metadata only - footage stays on-site</p></div>
-  <div class="card"><h3>Venue event stream</h3><p>Entity tracks, zone, speed, dwell - who moved where, when, how behavior changed. Door and access logs, alarm and panic-button events alongside.</p><p class="mono" style="margin-top:8px">venue_stream_8821.csv - P-114 dwell 45s - 9:12 PM</p></div>
-  <div class="card"><h3>Context + documents</h3><p>The incident report, staffing log, POS timestamps and prior-incident history hashed into the file - the notice window is graded from the venue's own records, not assumed.</p><p class="mono" style="margin-top:8px">incident_report.pdf - staffing_thu.csv - pos_21-04Z.json</p></div>
+  <div class="card"><h3>Venue cameras (optional)</h3><p>Anonymous event data from the cameras already on site. No camera data? The replay still works from door logs, till times and incident reports.</p><p class="mono" style="margin-top:8px">cam_events_0910.jsonl - metadata only - footage stays on-site</p></div>
+  <div class="card"><h3>Venue activity</h3><p>Who moved where, when, how fast, and how long they stayed. Plus door and access logs, alarms and panic-button presses.</p><p class="mono" style="margin-top:8px">venue_stream_8821.csv - P-114 dwell 45s - 9:12 PM</p></div>
+  <div class="card"><h3>Records and documents</h3><p>The incident report, staffing log, till times and past incidents are fingerprinted into the file. The time between a hazard being logged and the incident comes from the venue's own records, not guesswork.</p><p class="mono" style="margin-top:8px">incident_report.pdf - staffing_thu.csv - pos_21-04Z.json</p></div>
 </div>
 
-<h2>02 - Run it on your own files <span class="tag" style="font-size:10px;vertical-align:middle">ALPHA V0.1</span></h2>
+<h2>02 - Try it on your own files <span class="tag" style="font-size:10px;vertical-align:middle">ALPHA V0.1</span></h2>
 <div class="card">
-  <p style="color:var(--dim);font-size:14px;margin-bottom:12px">Not a canned story - real extraction. Drop a venue event CSV (time, entity, zone, speed) or an incident report. Your files are hashed and parsed here in the browser; nothing is uploaded. The record below is built from your bytes.</p>
-  <div class="drop" id="drop">Drop a venue event CSV or an incident report here - or click to choose files</div>
+  <p style="color:var(--dim);font-size:14px;margin-bottom:12px">Try it with your own file. Drop in a venue activity CSV (time, person, area, speed) or an incident report. Everything stays in your browser. Nothing is uploaded. The record below is built from your file.</p>
+  <div class="drop" id="drop">Drop a venue activity CSV or an incident report here, or click to choose a file</div>
   <input type="file" id="upl" multiple accept=".csv,.jsonl,.ndjson,.json,image/*,video/*,.pdf" style="display:none">
   <div id="uplog" style="margin-top:12px"></div>
   <div id="uprec" style="display:none;margin-top:16px">
     <div style="font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--acc);margin-bottom:10px">CLAIM RECORD - BUILT FROM YOUR FILES</div>
     <table class="rec" id="uprect"></table>
-    <div style="margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button class="run" id="upExport" style="padding:10px 22px;font-size:13.5px">Export signed record</button><span class="mono" id="upExNote" style="color:var(--dim);font-size:12px"></span></div>
+    <div style="margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button class="run" id="upExport" style="padding:10px 22px;font-size:13.5px">Export sealed record</button><span class="mono" id="upExNote" style="color:var(--dim);font-size:12px"></span></div>
   </div>
 </div>
 
-<h2>03 - Run the reconstruction</h2>
+<h2>03 - Run the replay</h2>
 <div class="card">
   <div id="stages">
-    <div class="stage"><div class="dot"></div>Ingesting the event stream, logs and incident report</div>
-    <div class="stage"><div class="dot"></div>Extracting the entities and zones - entrance, bar area, aisle 4</div>
-    <div class="stage"><div class="dot"></div>Building the 4D timeline - who moved, when, how behavior changed</div>
-    <div class="stage"><div class="dot"></div>Locating sudden-stop and logged-hazard events</div>
-    <div class="stage"><div class="dot"></div>Comparing extracted features with the synthetic reference corpus</div>
-    <div class="stage"><div class="dot"></div>Signing the record - hash, timestamp, audit ledger</div>
+    <div class="stage"><div class="dot"></div>Reading the activity data, logs and incident report</div>
+    <div class="stage"><div class="dot"></div>Finding people and areas: entrance, bar, aisle 4</div>
+    <div class="stage"><div class="dot"></div>Building the timeline: who moved, when, what changed</div>
+    <div class="stage"><div class="dot"></div>Finding sudden stops and logged hazards</div>
+    <div class="stage"><div class="dot"></div>Comparing it with our library of made-up incidents</div>
+    <div class="stage"><div class="dot"></div>Sealing the record: fingerprint, time stamp, audit log</div>
   </div>
-  <p class="starthere">START HERE - press Run. The fictional example builds a signed replay record in about 10 seconds.</p>
+  <p class="starthere">START HERE - press Run. The made-up example builds a sealed replay in about 10 seconds.</p>
   <button class="run pulse" id="run">Run reconstruction</button>
 </div>
 
-<h2>04 - Incident reconstruction - rendered from data, not video</h2>
+<h2>04 - The replay - drawn from data, not video</h2>
 <div class="card">
-  <p style="color:var(--dim);font-size:14px;margin-bottom:12px">No footage below. Every frame is rendered from the venue's own event metadata - entity tracks, zones, dwell times, timestamps, nothing else. An adjuster watches the incident happen; counsel replays it second by second. The venue's video never had to leave the site.</p>
+  <p style="color:var(--dim);font-size:14px;margin-bottom:12px">There's no video below. Every frame is drawn from the venue's own event data: where people were, how long they stayed and when, nothing else. You can watch the incident play out, then step through it second by second. The venue's video never has to leave the site.</p>
   <canvas id="scene" width="880" height="360"></canvas>
   <div class="ctl"><button class="run" id="playBtn" style="padding:10px 24px;font-size:14px">Play</button><input type="range" id="scrub" min="0" max="1000" value="0"><span id="hud">21:04 - hazard logged in aisle 4 - reconstruction ready</span></div>
 </div>
 
-<h2>05 - The 4D timeline</h2>
+<h2>05 - The timeline</h2>
 <div class="card"><div id="timeline"></div></div>
 
-<h2>06 - The claim-ready record</h2>
+<h2>06 - The record</h2>
 <div class="card">
   <table class="rec" id="rectab">
-    <tr><td>What happened</td><td>A customer slipped on a spilled drink in aisle 4 at 21:14; fall signature confirmed in the event stream; assisted up at 21:19, declined ambulance.</td></tr>
-    <tr><td>Notice window</td><td>Hazard logged at POS 21:04 - 10m 08s elapsed before the fall, no cleanup dispatched. The fictional stream contains a hazard log 10m 08s before the fall. Legal notice is not determined.</td></tr>
-    <tr><td>Synthetic pattern comparison</td><td>Fictional feature match: 88% against the generated premises-incident corpus. This is not a liability conclusion.</td></tr>
-    <tr><td>Claim type</td><td>GL - slip-and-fall. No liquor-liability marker: P-114 served one drink 90 minutes prior, no overserve pattern in POS history.</td></tr>
-    <tr><td>Severity and cost</td><td>Soft-tissue pattern per the incident report - medical reserve $7,500, within the graded band for this incident class. Staging screen: no prior-claimant match.</td></tr>
-    <tr><td>Cycle time</td><td>Fictional example runtime: <b>5 minutes 30 seconds.</b> This is a modeled demo value, not a production benchmark.</td></tr>
-    <tr><td>Evidence</td><td><span class="pill">event stream hashed</span><span class="pill">POS log hashed</span><span class="pill">incident report hashed</span><span class="pill">staffing log hashed</span></td></tr>
-    <tr><td>External evidence - selected by scenario</td><td><div class="mono" style="font-size:12px;line-height:1.8"><div><b style="color:var(--ok)">USED</b> time of day + operating hours - 21:14, venue open, aisle 4 should have been active and patrolled</div><div><b style="color:var(--ok)">USED</b> lighting / visibility - aisle 4 fixture at 40% output; shaped what a reasonable patron could see</div><div><b style="color:var(--ok)">USED</b> footfall - 34 patrons in venue, moderate aisle traffic; encountering the hazard was foreseeable</div><div><b style="color:var(--ok)">USED</b> staffing - 2 floor staff on shift against 4 scheduled; drove the 10-minute notice gap</div><div><b style="color:var(--ok)">USED</b> inspections - last documented floor sweep 20:51, twenty-three minutes before the fall</div><div><b style="color:var(--ok)">USED</b> emergency response - staff response 5m 02s, incident report opened 21:26; severity documented</div><div><b style="color:var(--warn)">EXCLUDED</b> weather (ice / rain) - indoor aisle spill; entrance log shows no tracked-in precipitation</div><div><b style="color:var(--warn)">EXCLUDED</b> third-party access - no vendors or contractors on site that evening</div></div><div style="margin-top:6px;color:var(--dim);font-size:12.5px">Selection follows the scenario: an icy-entry fall would pull the weather feed; this indoor spill excludes it with the reason stated. Every candidate is considered, then used or excluded - never a blanket checklist.</div></td></tr>
-    <tr><td>Signature</td><td class="mono" id="sigcell">record REAL-L-2c48b7e1 - sha-256 chained - audit ledger entry 14/14</td></tr>
+    <tr><td>What the example shows</td><td>Made-up example: a customer fell in aisle 4 at 21:14, near a logged drink spill. The fall shows up in the activity data. They were helped up at 21:19 and declined an ambulance.</td></tr>
+    <tr><td>Time since the hazard was logged</td><td>Spill logged at the till at 21:04, 10m 08s before the fall. No cleanup was logged. This does not decide legal notice.</td></tr>
+    <tr><td>Comparison with made-up cases</td><td>Made-up example: 88% similar to cases in our made-up library. This is not a finding on liability.</td></tr>
+    <tr><td>Claim type</td><td>General liability, slip-and-fall. Till records show P-114 bought one drink 90 minutes earlier.</td></tr>
+    <tr><td>Severity and cost</td><td>The incident report describes a soft-tissue injury. Example medical estimate $7,500. No match to past claimants in the made-up data.</td></tr>
+    <tr><td>Cycle time</td><td>Example run time: <b>5 minutes 30 seconds.</b> Demo figure, not a real-world benchmark.</td></tr>
+    <tr><td>Evidence</td><td><span class="pill">activity data fingerprinted</span><span class="pill">till log fingerprinted</span><span class="pill">incident report fingerprinted</span><span class="pill">staffing log fingerprinted</span></td></tr>
+    <tr><td>Outside information - chosen for this example</td><td><div class="mono" style="font-size:12px;line-height:1.8"><div><b style="color:var(--ok)">USED</b> time and opening hours - 21:14, venue open</div><div><b style="color:var(--ok)">USED</b> lighting - aisle 4 light at 40% output</div><div><b style="color:var(--ok)">USED</b> foot traffic - 34 people in the venue, moderate traffic in the aisle</div><div><b style="color:var(--ok)">USED</b> staffing - 2 floor staff on shift, 4 scheduled</div><div><b style="color:var(--ok)">USED</b> inspections - last logged floor sweep at 20:51, 23 minutes before the fall</div><div><b style="color:var(--ok)">USED</b> staff response - staff reached the customer in 5m 02s; incident report opened 21:26</div><div><b style="color:var(--warn)">EXCLUDED</b> weather (ice or rain) - indoor spill; entrance log shows no rain or snow tracked in</div><div><b style="color:var(--warn)">EXCLUDED</b> third-party access - no vendors or contractors on site that evening</div></div><div style="margin-top:6px;color:var(--dim);font-size:12.5px">What gets used depends on the example. A fall on an icy entrance would use weather. This indoor spill leaves it out, and the reason is shown. Each item is either used or left out, with a reason.</div></td></tr>
+    <tr><td>Seal</td><td class="mono" id="sigcell">record DEMO-L-2c48b7e1 - fingerprint chained - audit log entry 14/14</td></tr>
   </table>
-  <div style="margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button class="run" id="exportRec" style="padding:10px 22px;font-size:13.5px">Export signed record</button><span class="mono" id="exNote" style="color:var(--dim);font-size:12px"></span></div>
+  <div style="margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button class="run" id="exportRec" style="padding:10px 22px;font-size:13.5px">Export sealed record</button><span class="mono" id="exNote" style="color:var(--dim);font-size:12px"></span></div>
   <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
-    <div class="mono" style="font-size:12px;color:var(--dim);margin-bottom:8px">WHAT THIS RECORD CHANGES - the baselines below are editable assumptions, not claims; set them to your own book</div>
+    <div class="mono" style="font-size:12px;color:var(--dim);margin-bottom:8px">WHAT THIS COULD CHANGE - these starting numbers are assumptions you can edit, not promises. Set them to match your own claims.</div>
     <table class="rec">
-      <tr><td>Human review time</td><td>Baseline <input id="ecH1" type="number" value="14" style="width:70px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> adjuster hours to assemble this file by hand (footage pull, statements, reports). With the record: about 10 minutes of review. <b id="ecHD1"></b></td></tr>
-      <tr><td>Cycle time</td><td>Baseline <input id="ecD1" type="number" value="30" style="width:70px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> days from incident to claim-ready file. With the record: same day, built at ingest. <b id="ecDD1"></b></td></tr>
-      <tr><td>Estimate / reserve variance</td><td>Open-file reserve assumption <input id="ecO1" type="number" value="25000" style="width:90px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> vs the graded reserve in this record <input id="ecG1" type="number" value="7500" style="width:90px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)">. <b id="ecOD1"></b></td></tr>
+      <tr><td>Human review time</td><td>Baseline <input id="ecH1" type="number" value="14" style="width:70px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> adjuster hours to assemble this file by hand (footage pull, statements, reports). With the record: the demo assumes about 10 minutes of review. <b id="ecHD1"></b></td></tr>
+      <tr><td>Cycle time</td><td>Baseline <input id="ecD1" type="number" value="30" style="width:70px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> days from incident to claim-ready file. With the record: the demo assumes the same day. <b id="ecDD1"></b></td></tr>
+      <tr><td>Estimate / reserve variance</td><td>Open-file reserve assumption <input id="ecO1" type="number" value="25000" style="width:90px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> vs the estimate in this record <input id="ecG1" type="number" value="7500" style="width:90px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)">. <b id="ecOD1"></b></td></tr>
     </table>
   </div>
 
 </div>
 
-<h2>07 - The record store</h2>
+<h2>07 - Saved records</h2>
 <div class="card">
-  <p style="color:var(--dim);font-size:14px;margin-bottom:12px">Every record you sign persists to a local store with a hash-chained audit ledger - demo runs and your own files alike. Reload the page and they are still here; verify the chain any time. Nothing leaves the browser.</p>
+  <p style="color:var(--dim);font-size:14px;margin-bottom:12px">Every record you seal is saved in your browser with a tamper-evident audit log, whether it came from the demo or your own file. Reload the page and they're still here. You can check the log any time. Nothing leaves your browser.</p>
   <div class="stats">
-    <div class="stat"><div class="n" id="rsRec">0</div><div class="l">signed records stored</div></div>
-    <div class="stat"><div class="n" id="rsAudit">0</div><div class="l">audit ledger entries</div></div>
+    <div class="stat"><div class="n" id="rsRec">0</div><div class="l">sealed records saved</div></div>
+    <div class="stat"><div class="n" id="rsAudit">0</div><div class="l">audit log entries</div></div>
   </div>
   <div id="rsList" style="font-family:var(--mono);font-size:12.5px;max-height:180px;overflow-y:auto"></div>
   <div style="margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-    <button class="run" id="rsVerify" style="padding:10px 22px;font-size:13.5px">Verify audit chain</button>
+    <button class="run" id="rsVerify" style="padding:10px 22px;font-size:13.5px">Check audit log</button>
     <span class="mono" id="rsNote" style="color:var(--dim);font-size:12px"></span>
   </div>
 </div>
 
-<h2>08 - Proof at scale: the synthetic harness</h2>
+<h2>08 - Testing at scale with made-up data</h2>
 <div class="card">
-  <p style="color:var(--dim);font-size:14px;margin-bottom:10px">Real incident footage is rare and legally radioactive. The generator writes millions of labeled premises incidents - slips, altercations, intrusions, staged claims - and the grader pre-trains on those. It ships already knowing what a liability-relevant event looks like.</p>
+  <p style="color:var(--dim);font-size:14px;margin-bottom:10px">Real incident footage is rare and hard to use legally. So we make up labeled incidents (slips, fights, break-ins, staged claims) and the system practices on those first.</p>
   <div class="ctl" id="scales">
     <button class="scbtn on" data-s="0">100 incidents</button>
     <button class="scbtn" data-s="1">1,000 incidents</button>
@@ -164,28 +165,28 @@
     <button class="scbtn" data-s="4">100,000 incidents</button>
   </div>
   <div class="stats">
-    <div class="stat"><div class="n" id="hCohort">100</div><div class="l">synthetic venues</div></div>
-    <div class="stat"><div class="n" id="hCorpus">61K</div><div class="l">labeled incidents in corpus</div></div>
-    <div class="stat"><div class="n" id="hAcc">86.1%</div><div class="l">grader accuracy vs ground truth</div></div>
-    <div class="stat"><div class="n" id="hRuns">0</div><div class="l">incidents graded this session</div></div>
+    <div class="stat"><div class="n" id="hCohort">100</div><div class="l">made-up venues</div></div>
+    <div class="stat"><div class="n" id="hCorpus">61K</div><div class="l">made-up incidents in the library</div></div>
+    <div class="stat"><div class="n" id="hAcc">86.1%</div><div class="l">correct on the made-up test set</div></div>
+    <div class="stat"><div class="n" id="hRuns">0</div><div class="l">incidents scored this session</div></div>
   </div>
   <div class="chartwrap"><div class="chart" id="accChart"></div></div>
   <div id="hlog" style="margin-top:10px"></div>
   <div class="verd" id="hverd"></div>
-  <button class="run" id="hgo" style="margin-top:14px">Generate + grade a synthetic incident</button>
-  <button class="run" id="hgo10k" style="margin-top:14px;margin-left:10px">Run the 10,000-incident validation</button>
+  <button class="run" id="hgo" style="margin-top:14px">Generate and score a made-up incident</button>
+  <button class="run" id="hgo10k" style="margin-top:14px;margin-left:10px">Run the 10,000-incident test</button>
   <div id="h10k" style="margin-top:12px"></div>
 </div>
 
-<h2>09 - Why it works</h2>
+<h2>09 - How it works</h2>
 <div class="cols3">
-  <div class="card"><h3>No footage required.</h3><p>Venues already narrate themselves - camera metadata, door logs, POS timestamps, alarm events. The claim file builds from data the venue already has; footage is supporting evidence, not the backbone.</p></div>
-  <div class="card"><h3>The brain learns on synthetic incidents.</h3><p>Millions of simulated slips, altercations, intrusions and staging patterns - every record labeled, every outcome graded. The generator writes the corpus; the grader is measured against it.</p></div>
-  <div class="card"><h3>Signed records, not stories.</h3><p>Every record is hashed, timestamped, and written to an audit ledger. The insurer gets a file it can defend, not a narrative it has to re-litigate.</p></div>
+  <div class="card"><h3>No video needed.</h3><p>Venues already record what happens: camera events, door logs, till times, alarms. The replay is built from data the venue already has. Video helps, but it's not required.</p></div>
+  <div class="card"><h3>It learns from made-up incidents.</h3><p>Made-up slips, fights, break-ins and staged claims, each with a known answer. We write the cases, then score the system against them.</p></div>
+  <div class="card"><h3>Sealed records, not stories.</h3><p>Every record is fingerprinted, time-stamped and written to an audit log. You get a record you can check, not a story you have to piece together again.</p></div>
 </div>
 
-<h2>10 - Where this sits</h2>
-<div class="card"><p style="color:var(--dim);font-size:14px">This working beta applies the same evidence-record pattern to supplied venue events and documents: event chronology, logged-hazard timing, source hashes, missing-channel labels and a signed extraction record for human review. It does not establish legal notice or liability.</p></div>
+<h2>10 - What this is and isn't</h2>
+<div class="card"><p style="color:var(--dim);font-size:14px">Liability Replay is in beta. It replays the data you give it and shows what's missing. A person makes the call. It does not decide legal notice or liability.</p></div>
 
 <footer>Copyright Placid Lake LLC 2026</footer>
 </div>
@@ -348,7 +349,7 @@ function buildScene(evts){
   const hz=haz?pt(haz,hazI):null;
   return {evs,zones,hz,hazZone:haz?zc[zkey(haz.zone)]:null,path,marks,fallT,staffT:2,label:haz?'hazard logged '+fmtT(haz.ts):'',fallLabel:'FALL '+fT,src:'dropped',
     what:'Reconstructed from the dropped event stream: '+n+' events, entity '+ent+', '+zNames.length+' zones. Sudden-stop signature in '+fall.zone+' at '+fT+' (velocity '+(+tr[Math.max(0,fi-1)].vel||0).toFixed(1)+' to '+(+fall.vel||0).toFixed(1)+' m/s).',
-    notice:noticeTxt?('Hazard logged '+fmtT(haz.ts)+' - '+noticeTxt+' elapsed before the fall, no cleanup event in the stream. Notice window computed from the dropped file.'):(hazardsAllAfter?'Hazard events in this stream post-date the fall - no pre-fall notice establishable from this file; POS or incident-report evidence would be required.':'No hazard event present in the dropped stream - a notice window cannot be established from this file alone; POS or incident-report evidence would be required.')};
+    notice:noticeTxt?('Hazard logged '+fmtT(haz.ts)+' - '+noticeTxt+' elapsed before the fall, no cleanup event in the stream. Time since the hazard was logged computed from the dropped file.'):(hazardsAllAfter?'Hazard events in this stream post-date the fall - no pre-fall notice establishable from this file; POS or incident-report evidence would be required.':'No hazard event present in the dropped stream - a notice window cannot be established from this file alone; POS or incident-report evidence would be required.')};
 }
 
 function parseCsvRows(text){const out=[];let row=[],v='',q=false;for(let i=0;i<text.length;i++){const c=text[i];if(q){if(c==='"'&&text[i+1]==='"'){v+='"';i++;}else if(c==='"')q=false;else v+=c;}else if(c==='"')q=true;else if(c===','){row.push(v);v='';}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(v);if(row.some(x=>x.trim()))out.push(row);row=[];v='';}else v+=c;}row.push(v);if(row.some(x=>x.trim()))out.push(row);return out;}
@@ -375,7 +376,7 @@ async function handleFiles(files){
     document.querySelectorAll('#rectab tr').forEach(tr=>{
       const k=tr.cells[0].textContent;
       if(k==='What happened')tr.cells[1].textContent=SCN.what;
-      if(k==='Notice window')tr.cells[1].textContent=SCN.notice;
+      if(k==='Time since the hazard was logged')tr.cells[1].textContent=SCN.notice;
     });
     pt=0;playing=false;draw(0);
     const rb=document.getElementById('run');rb.disabled=false;rb.textContent='Run the reconstruction on this file';
@@ -386,7 +387,7 @@ async function handleFiles(files){
   const t=document.getElementById('uprect');
   t.innerHTML='<tr><td>Files hashed</td><td>'+files.length+' file(s), '+((csvRows||jsonlRows)?(csvRows?csvRows+' CSV events':'')+(csvRows&&jsonlRows?' + ':'')+(jsonlRows?jsonlRows+' site-agent JSON events':'')+' parsed':'no event readings found')+'</td></tr>'
     +'<tr><td>Preliminary read</td><td>'+(csvRows+jsonlRows>10?(droppedEvents.length>=10?'Event stream present - press Run above to reconstruct THIS file (scene, timeline and record rebuild from your data).':'Event stream present - reconstruction can run on this file.'):'More event data needed for a full reconstruction.')+'</td></tr>'
-    +'<tr><td>Signature</td><td class="mono">record built in-browser - nothing uploaded</td></tr>';
+    +'<tr><td>Seal</td><td class="mono">record built in-browser - nothing uploaded</td></tr>';
   document.getElementById('upExport').onclick=()=>{
     const rows=[...t.querySelectorAll('tr')].map(tr=>[tr.cells[0].textContent,tr.cells[1].textContent]);
     exportRecord(rows,document.getElementById('upExNote'));
@@ -474,7 +475,7 @@ document.getElementById('hgo10k').onclick=async()=>{
   document.getElementById('h10k').innerHTML=html;
   const v=document.getElementById('hverd');v.style.display='block';v.className='verd hit';
   v.textContent='VALIDATION COMPLETE: '+N.toLocaleString()+' incidents - overall '+(100*hits/N).toFixed(1)+'% measured - per-category breakdown above.';
-  btn.disabled=false;btn.textContent='Run the 10,000-incident validation';
+  btn.disabled=false;btn.textContent='Run the 10,000-incident test';
 };
 </script>
 <script>
