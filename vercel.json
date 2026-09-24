@@ -1,0 +1,5 @@
+{
+  "redirects": [
+    { "source": "/(.*)", "destination": "https://www.duranta.com/private/liability-replay/", "permanent": false }
+  ]
+}
