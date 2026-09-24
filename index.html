@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Liability Replay - Capability Demo</title>
+<title>Liability Replay - Product demo</title>
 <style>
   :root{--bg:#0b0e13;--panel:#12161e;--line:#232a36;--txt:#e8edf4;--dim:#8b96a7;--acc:#4da3ff;--good:#3fd68f;--warn:#ffb454;--ok:#3fd68f;--mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -133,8 +133,8 @@
   <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
     <div class="mono" style="font-size:12px;color:var(--dim);margin-bottom:8px">WHAT THIS COULD CHANGE <span class="dlab syn">SYNTHETIC DATA</span> - these starting numbers are synthetic assumptions you can edit, not promises. Set them to match your own claims.</div>
     <table class="rec">
-      <tr><td>Human review time</td><td>Baseline <input id="ecH1" type="number" value="14" style="width:70px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> adjuster hours to assemble this file by hand (footage pull, statements, reports). With the record: the demo assumes about 10 minutes of review. <b id="ecHD1"></b></td></tr>
-      <tr><td>Cycle time</td><td>Baseline <input id="ecD1" type="number" value="30" style="width:70px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> days from incident to claim-ready file. With the record: the demo assumes the same day. <b id="ecDD1"></b></td></tr>
+      <tr><td>Human review time</td><td>Baseline <input id="ecH1" type="number" value="14" style="width:70px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> adjuster hours to assemble this file by hand (footage pull, statements, reports). With the record: the product demo assumes about 10 minutes of review. <b id="ecHD1"></b></td></tr>
+      <tr><td>Cycle time</td><td>Baseline <input id="ecD1" type="number" value="30" style="width:70px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> days from incident to claim-ready file. With the record: the product demo assumes the same day. <b id="ecDD1"></b></td></tr>
       <tr><td>Estimate / reserve variance</td><td>Open-file reserve assumption <input id="ecO1" type="number" value="25000" style="width:90px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)"> vs the estimate in this record <input id="ecG1" type="number" value="7500" style="width:90px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-family:var(--mono)">. <b id="ecOD1"></b></td></tr>
     </table>
   </div>
@@ -143,7 +143,7 @@
 
 <h2>07 - Saved records <span class="dlab syn">SYNTHETIC DATA</span></h2>
 <div class="card">
-  <p style="color:var(--dim);font-size:14px;margin-bottom:12px">Every record you seal is saved in your browser with a tamper-evident audit log, whether it came from the demo or your own file. Reload the page and they're still here. You can check the log any time. Nothing leaves your browser.</p>
+  <p style="color:var(--dim);font-size:14px;margin-bottom:12px">Every record you seal is saved in your browser with a tamper-evident audit log, whether it came from the product demo or your own file. Reload the page and they're still here. You can check the log any time. Nothing leaves your browser.</p>
   <div class="stats">
     <div class="stat"><div class="n" id="rsRec">0</div><div class="l">sealed records saved</div></div>
     <div class="stat"><div class="n" id="rsAudit">0</div><div class="l">audit log entries</div></div>
@@ -190,7 +190,7 @@
 <div class="card"><p style="color:var(--dim);font-size:14px">Liability Replay is in beta. It replays the data you give it and shows what's missing. A person makes the call. It does not decide legal notice or liability.</p></div>
 
 <div class="card" id="real-data"><p style="font-size:14px;margin-bottom:8px"><strong>Real-world numbers</strong> <span class="dlab pub">PUBLIC DATA</span></p><p style="color:var(--dim);font-size:14px;margin-bottom:6px"><span class="dlab pub">PUBLIC DATA</span> Falls were the leading cause of nonfatal injury emergency room visits in the U.S. in 2023: 8,870,302 visits. Source: CDC WISQARS, <a href="https://wisqars.cdc.gov/pdfs/leading-causes-of-nonfatal-emergency-dept-visits_2023_508.pdf" target="_blank" rel="noopener" style="color:var(--acc)">10 Leading Causes of Nonfatal Emergency Department Visits, 2023</a>.</p><p style="color:var(--dim);font-size:14px;margin-bottom:6px"><span class="dlab pub">PUBLIC DATA</span> Falls among adults 65 and older caused over 38,000 deaths and nearly 3 million emergency room visits in 2021. Source: CDC, <a href="https://www.cdc.gov/falls/about/index.html" target="_blank" rel="noopener" style="color:var(--acc)">About Older Adult Fall Prevention</a>.</p><p style="color:var(--dim);font-size:14px;margin-bottom:6px"><span class="dlab pub">PUBLIC DATA</span> Claims adjusters, appraisers, examiners and investigators held 365,300 jobs in the U.S. in 2024, with median pay of $36.92 an hour. Source: U.S. Bureau of Labor Statistics, <a href="https://www.bls.gov/ooh/business-and-financial/claims-adjusters-appraisers-examiners-and-investigators.htm" target="_blank" rel="noopener" style="color:var(--acc)">Occupational Outlook Handbook</a>.</p></div>
-<div class="card" id="data-sources"><p style="color:var(--dim);font-size:14px"><strong>Data sources.</strong> Every number on this page is labeled SYNTHETIC DATA or PUBLIC DATA where it appears. Public data comes from the sources linked next to each figure. The example incident, venue activity, till and staffing logs, cost figures and test venues are synthetic data, written by us for this demo. We kept the example synthetic on purpose: a real case would mean real people's data. No other government, regulator or public data is used.</p></div>
+<div class="card" id="data-sources"><p style="color:var(--dim);font-size:14px"><strong>Data sources.</strong> Every number on this page is labeled SYNTHETIC DATA or PUBLIC DATA where it appears. Public data comes from the sources linked next to each figure. The example incident, venue activity, till and staffing logs, cost figures and test venues are synthetic data, written by us for this product demo. We kept the example synthetic on purpose: a real case would mean real people's data. No other government, regulator or public data is used.</p></div>
 <footer>Copyright Placid Lake LLC 2026</footer>
 </div>
 
